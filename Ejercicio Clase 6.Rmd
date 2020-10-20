@@ -1,0 +1,51 @@
+---
+title: "Ejercicio Clase 6"
+output: html_notebook
+---
+
+En primer lugar, comenzamos prendiendo la librería tidyverse.
+
+```{r}
+library(tidyverse)
+```
+
+Después importamos y guardamos como objeto la muestra que ya bajamos previamente a nuestro escritorio del repositorio de MetodosCiPol.
+
+```{r}
+muestra <- read_csv("~/Desktop/muestra.csv")
+```
+
+Separamos la variable "dire" en 3 nuevas variables utilizando a la "," como separador. 
+
+```{r}
+muestra <- separate(muestra, dire, sep = ",", into = c("calle", "localidad", "provincia"))
+```
+
+Nuevamente utilizamos el comando para filtrar la variable "calle" entre números y palabras utilizando las expresiones regulares "d+" y "D+"
+
+```{r}
+muestra <- separate(muestra, calle, sep = "\\d+", into = c("1", "2"), remove = FALSE)
+muestra <- separate(muestra, calle, sep = "\\D+", into = c("3", "4"), remove = FALSE)
+```
+
+Eliminamos las columnas que no nos son útiles y reordenamos el dataframe 
+
+```{r}
+muestra <- muestra[c("1","4","localidad","provincia")]
+muestra <- muestra %>% rename(calle = 1) %>% rename(número = 2)
+```
+
+Volvemos a utilizar el mismo comando para limpiar la variable calle
+
+```{r}
+muestra <- separate(muestra, calle, sep = "Sin datos|Sin Número|N°", into = c("1", "2"), remove = FALSE)
+```
+
+Nuevamente eliminamos las columnas que no nos son útiles y reordenamos el dataframe
+
+```{r}
+muestra <- muestra[c("1", "número", "localidad", "provincia")]
+muestra <- muestra %>% rename(calle = 1)
+```
+
+
